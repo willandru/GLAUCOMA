@@ -1,0 +1,97 @@
+% Read an example image
+
+A= imread("072.jpg");
+B= imread("168.jpg");
+C= imread("RET025OD.jpg");
+D= imread("RET026OS.jpg");
+E= imread("TRAIN000022.jpg");
+F= 
+
+
+originalImage = imread('072.jpg'); % Replace 'your_image.jpg' with the actual image file
+
+% Convert the image to grayscale if it's not already
+grayImage = rgb2gray(originalImage);
+
+% Choose a threshold value (you can change this value)
+thresholdValue = 160;
+
+% Perform thresholding
+binaryImage = im2bw(grayImage, thresholdValue/255); % Normalize threshold to [0, 1]
+
+% Calculate image moments
+[m, n] = size(binaryImage);
+sumx = 0;
+sumy = 0;
+mu00 = sum(binaryImage(:)); % µ00
+
+for x = 1:m
+    for y = 1:n
+        sumx = sumx + x * binaryImage(x, y);
+        sumy = sumy + y * binaryImage(x, y);
+    end
+end
+
+% Calculate centroid coordinates
+Cx = sumx / mu00;
+Cy = sumy / mu00;
+
+% Display centroid coordinates
+fprintf('Centroid Coordinates: Cx = %.2f, Cy = %.2f\n', Cx, Cy);
+
+% Display the centroid on the binary image
+
+figure;
+% Display the original and binary images side by side
+subplot(1, 2, 1);
+imshow(grayImage);
+title('Original Image');
+subplot(1, 2, 2);
+imshow(binaryImage);
+hold on;
+plot(Cy, Cx, 'r*'); % Note: Swap Cx and Cy for plotting due to matrix indexing
+title('Binary Image with Centroid');
+
+
+
+% Assuming Cx and Cy are the centroid coordinates, and originalImage is your original RGB image
+
+% Dimensions of the square ROI
+roiSize = 500;
+
+% Calculate the coordinates for the top-left corner of the ROI
+roiTopLeftX = round(Cx - roiSize / 2);
+roiTopLeftY = round(Cy - roiSize / 2);
+
+% Ensure that the ROI stays within the image boundaries
+roiTopLeftX = max(1, roiTopLeftX);
+roiTopLeftY = max(1, roiTopLeftY);
+
+% Calculate the coordinates for the bottom-right corner of the ROI
+roiBottomRightX = roiTopLeftX + roiSize - 1;
+roiBottomRightY = roiTopLeftY + roiSize - 1;
+
+% Ensure that the ROI stays within the image boundaries
+roiBottomRightX = min(size(originalImage, 1), roiBottomRightX);
+roiBottomRightY = min(size(originalImage, 2), roiBottomRightY);
+
+% Extract the sub-image or patch
+opticDiscPatch = originalImage(roiTopLeftX:roiBottomRightX, roiTopLeftY:roiBottomRightY, :);
+
+% Display the original image and the extracted patch
+figure;
+subplot(1, 2, 1);
+imshow(originalImage);
+title('Original Image');
+
+subplot(1, 2, 2);
+imshow(opticDiscPatch);
+title('Optic Disc Patch');
+
+% Display the ROI on the original image
+hold on;
+rectangle('Position', [roiTopLeftY, roiTopLeftX, roiSize, roiSize], 'EdgeColor', 'r', 'LineWidth', 2);
+hold off;
+
+
+
