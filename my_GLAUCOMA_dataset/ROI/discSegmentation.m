@@ -1,6 +1,6 @@
 clc, clear, close all;
 
-imagen= imread("Im046_ACRIMA.jpg");
+imagen= imread("Im017_ACRIMA.jpg");
 
 
 %CONTRIBUCION DE CADA COLOR
@@ -117,7 +117,7 @@ title('Imagen Segmentada (RGB)');
 
 % Coordenadas del centro y radio del círculo
 
-imagen_circulo_COPA=imagen_segmentada_azul_verde;
+imagen_circulo_COPA=imagen_segmentada_verde;
 imagen_circulo_DISCO=imagen_segmentada_rojo;
 
 
